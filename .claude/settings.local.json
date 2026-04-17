@@ -9,7 +9,9 @@
       "Bash(grep -v \"^$\")",
       "Bash(./gradlew compileJava --rerun-tasks -Porg.gradle.java.warnings.enabled=true)",
       "Bash(grep -vE \"^>|BUILD|actionable|Configure|Loom|^\\\\s*$\")",
-      "Bash(./gradlew compileJava --rerun-tasks -Dorg.gradle.jvmargs=-Xlint:all)"
+      "Bash(./gradlew compileJava --rerun-tasks -Dorg.gradle.jvmargs=-Xlint:all)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }

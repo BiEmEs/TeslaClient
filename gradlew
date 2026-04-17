@@ -117,6 +117,15 @@ esac
 CLASSPATH="\\\"\\\""
 
 
+# Load local.properties if present (gitignored local config)
+if [ -f "$APP_HOME/local.properties" ]; then
+    LOCAL_JAVA_HOME=$(grep '^org\.gradle\.java\.home=' "$APP_HOME/local.properties" | cut -d'=' -f2-)
+    if [ -n "$LOCAL_JAVA_HOME" ] && [ -z "$JAVA_HOME" ]; then
+        JAVA_HOME="$LOCAL_JAVA_HOME"
+        export JAVA_HOME
+    fi
+fi
+
 # Determine the Java command to use to start the JVM.
 if [ -n "$JAVA_HOME" ] ; then
     if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
