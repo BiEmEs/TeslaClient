@@ -1,0 +1,93 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Client",
+      "presentation": {
+        "group": "Mod Development - TeslaBeta-main",
+        "order": 0
+      },
+      "projectName": "TeslaBeta-main",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\BiEmE\\Documents\\TeslaBeta-main\\build\\moddev\\clientRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\BiEmE\\Documents\\TeslaBeta-main\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dteslaclient%%C:\\Users\\BiEmE\\Documents\\TeslaBeta-main\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Data",
+      "presentation": {
+        "group": "Mod Development - TeslaBeta-main",
+        "order": 1
+      },
+      "projectName": "TeslaBeta-main",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\BiEmE\\Documents\\TeslaBeta-main\\build\\moddev\\dataRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\BiEmE\\Documents\\TeslaBeta-main\\build\\moddev\\dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dteslaclient%%C:\\Users\\BiEmE\\Documents\\TeslaBeta-main\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "GameTestServer",
+      "presentation": {
+        "group": "Mod Development - TeslaBeta-main",
+        "order": 2
+      },
+      "projectName": "TeslaBeta-main",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\BiEmE\\Documents\\TeslaBeta-main\\build\\moddev\\gameTestServerRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\BiEmE\\Documents\\TeslaBeta-main\\build\\moddev\\gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003dteslaclient%%C:\\Users\\BiEmE\\Documents\\TeslaBeta-main\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Server",
+      "presentation": {
+        "group": "Mod Development - TeslaBeta-main",
+        "order": 3
+      },
+      "projectName": "TeslaBeta-main",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\BiEmE\\Documents\\TeslaBeta-main\\build\\moddev\\serverRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\BiEmE\\Documents\\TeslaBeta-main\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dteslaclient%%C:\\Users\\BiEmE\\Documents\\TeslaBeta-main\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    }
+  ]
+}

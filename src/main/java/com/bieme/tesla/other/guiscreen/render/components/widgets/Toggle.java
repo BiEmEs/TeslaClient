@@ -1,0 +1,163 @@
+package com.bieme.tesla.other.guiscreen.render.components.widgets;
+
+import com.bieme.tesla.Client;
+import com.bieme.tesla.other.guiscreen.render.ClientDraw;
+import com.bieme.tesla.other.guiscreen.render.components.AbstractWidget;
+import com.bieme.tesla.other.guiscreen.render.components.Frame;
+import com.bieme.tesla.other.guiscreen.render.components.ModuleButton;
+import com.bieme.tesla.other.guiscreen.settings.Setting;
+import net.minecraft.client.gui.GuiGraphics;
+
+import java.awt.*;
+
+public class Toggle extends AbstractWidget {
+
+    private final Frame frame;
+    private final ModuleButton master;
+    private final Setting setting;
+
+    private final String toggle_name;
+
+    private int x;
+    private int y;
+
+    private int width;
+    private int height;
+
+    private int save_y;
+
+    private boolean can;
+
+    private final ClientDraw font = new ClientDraw(1);
+
+    public Toggle(Frame frame, ModuleButton master, String tag, int update_position) {
+        this.frame = frame;
+        this.master = master;
+        this.setting = Client.getSettingManager().get_setting_with_tag(master.get_module().get_tag(), tag);
+
+        this.x = master.get_x();
+        this.y = update_position;
+        this.save_y = this.y;
+
+        this.width = master.get_width();
+        this.height = font.getStringHeight();
+
+        this.toggle_name = this.setting.get_name();
+        this.can = true;
+    }
+
+    public Setting get_setting() {
+        return this.setting;
+    }
+
+    @Override
+    public void does_can(boolean value) {
+        this.can = value;
+    }
+
+    @Override
+    public void set_x(int x) {
+        this.x = x;
+    }
+
+    @Override
+    public void set_y(int y) {
+        this.y = y;
+    }
+
+    @Override
+    public void set_width(int width) {
+        this.width = width;
+    }
+
+    @Override
+    public void set_height(int height) {
+        this.height = height;
+    }
+
+    @Override
+    public int get_x() {
+        return this.x;
+    }
+
+    @Override
+    public int get_y() {
+        return this.y;
+    }
+
+    @Override
+    public int get_width() {
+        return this.width;
+    }
+
+    @Override
+    public int get_height() {
+        return this.height;
+    }
+
+    public int get_save_y() {
+        return this.save_y;
+    }
+
+    @Override
+    public boolean motion_pass(int mx, int my) {
+        return motion(mx, my);
+    }
+
+    public boolean motion(int mx, int my) {
+        return mx >= get_x() && my >= get_save_y() && mx <= get_x() + get_width() && my <= get_save_y() + get_height();
+    }
+
+    public boolean can() {
+        return this.can;
+    }
+
+    @Override
+    public void mouse(int mx, int my, int mouse) {
+        if (mouse == 0 && motion(mx, my) && this.master.is_open() && can()) {
+            this.frame.does_can(false);
+            this.setting.set_value(!this.setting.getBoolValue());
+        }
+    }
+
+    @Override
+    public void render(GuiGraphics gui, int master_y, int separe, int absolute_x, int absolute_y) {
+        set_width(this.master.get_width() - separe);
+        this.save_y = this.y + master_y;
+
+        int ns_r = Client.clickGui.theme_widget_name_r;
+        int ns_g = Client.clickGui.theme_widget_name_g;
+        int ns_b = Client.clickGui.theme_widget_name_b;
+        int ns_a = Client.clickGui.theme_widget_name_a;
+
+        int bg_r = Client.clickGui.theme_widget_background_r;
+        int bg_g = Client.clickGui.theme_widget_background_g;
+        int bg_b = Client.clickGui.theme_widget_background_b;
+        int bg_a = Client.clickGui.theme_widget_background_a;
+
+        boolean is_active = this.setting.getBoolValue();
+
+        if (is_active) {
+            int accent = Client.clickGui.getAccentColor(this.save_y, Math.abs(this.toggle_name.hashCode() % 20));
+            int ar = (accent >> 16) & 0xFF;
+            int ag = (accent >> 8) & 0xFF;
+            int ab = accent & 0xFF;
+
+            ClientDraw.draw_rect(gui, get_x(), this.save_y, get_x() + 3, this.save_y + this.height, ar, ag, ab, 255);
+            ClientDraw.draw_rect(gui, get_x() + 3, this.save_y, get_x() + this.width, this.save_y + this.height, bg_r, bg_g, bg_b, bg_a);
+        }
+
+        ClientDraw.draw_string(gui, this.toggle_name, this.x + 2, this.save_y, ns_r, ns_g, ns_b, ns_a);
+
+        String state_text = is_active ? "[On]" : "[Off]";
+        int state_width = font.getStringWidth(state_text);
+        ClientDraw.draw_string(gui, state_text, this.x + this.width - state_width - 2, this.save_y, ns_r, ns_g, ns_b, ns_a);
+    }
+
+    @Override
+    public void release(int mx, int my, int mouse) {
+        if (mouse == 0) {
+            this.frame.does_can(true);
+        }
+    }
+}

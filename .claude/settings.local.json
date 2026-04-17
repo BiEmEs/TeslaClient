@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew runClient)",
+      "Bash(echo \"PID: $!\")",
+      "Bash(xargs grep *)",
+      "Bash(./gradlew compileJava)",
+      "Bash(./gradlew compileJava --rerun-tasks)",
+      "Bash(grep -v \"^$\")",
+      "Bash(./gradlew compileJava --rerun-tasks -Porg.gradle.java.warnings.enabled=true)",
+      "Bash(grep -vE \"^>|BUILD|actionable|Configure|Loom|^\\\\s*$\")",
+      "Bash(./gradlew compileJava --rerun-tasks -Dorg.gradle.jvmargs=-Xlint:all)"
+    ]
+  }
+}

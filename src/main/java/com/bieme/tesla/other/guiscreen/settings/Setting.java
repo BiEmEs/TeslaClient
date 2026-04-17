@@ -1,0 +1,51 @@
+package com.bieme.tesla.other.guiscreen.settings;
+
+public class Setting {
+    private String name;
+    private Object value;
+    private Object defaultValue;
+    private String type = "toggle";
+    private double min = 0, max = 100;
+    private String currentValue = "";
+
+    public Setting(String name, Object value) {
+        this.name = name;
+        this.value = value;
+        this.defaultValue = value;
+    }
+
+    public String getName() { return name; }
+    public String get_type() { return type; }
+    public Object getValue() { return value; }
+    public void setValue(Object v) { this.value = v; }
+    public Object getDefaultValue() { return defaultValue; }
+    
+    public boolean getBoolValue() {
+        if (value instanceof Boolean) return (Boolean) value;
+        if (value instanceof String) return Boolean.parseBoolean((String) value);
+        return false;
+    }
+    
+    public double getSliderValue() {
+        if (value instanceof Number) return ((Number) value).doubleValue();
+        return 0;
+    }
+    
+    public void setSliderValue(double v) {
+        this.value = v;
+    }
+    
+    public double getMin() { return min; }
+    public double getMax() { return max; }
+    public String getStringValue() {
+        if (value != null) return value.toString();
+        return "";
+    }
+    
+    public String get_current_value() { return currentValue.isEmpty() ? getStringValue() : currentValue; }
+    public void set_current_value(String v) { this.currentValue = v; }
+
+    public String get_name() { return name; }
+    public void set_value(Object v) { this.value = v; }
+    public Object get_value(boolean asBool) { return asBool ? getBoolValue() : value; }
+}

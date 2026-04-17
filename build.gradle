@@ -1,0 +1,108 @@
+buildscript {
+    repositories {
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.fabricmc:fabric-loom:1.8.1'
+    }
+}
+
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'idea'
+}
+
+apply plugin: 'fabric-loom'
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+repositories {
+    maven {
+        name = 'Fabric'
+        url = 'https://maven.fabricmc.net/'
+    }
+    mavenCentral()
+}
+
+sourceSets.main.resources {
+    srcDir 'src/main/resources'
+}
+
+configurations {
+    localRuntime.extendsFrom implementation
+}
+
+dependencies {
+    implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+    implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
+    compileOnly 'org.jetbrains:annotations:24.0.1'
+    implementation 'org.jetbrains:annotations:24.0.1'
+    
+    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+    
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+}
+
+tasks.named('processResources') {
+    inputs.property 'version', project.version
+    inputs.property 'minecraft_version', project.minecraft_version
+    
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version, 'minecraft_version': project.minecraft_version
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+            'Specification-Title': mod_name,
+            'Specification-Version': '1',
+            'Implementation-Title': mod_name,
+            'Implementation-Version': project.version,
+            'Implementation-Vendor': 'Bieme',
+            'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        )
+    }
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url = "file://${project.projectDir}/repo"
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:all' << '-Xlint:-processing'
+}
+
+tasks.withType(Copy).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}

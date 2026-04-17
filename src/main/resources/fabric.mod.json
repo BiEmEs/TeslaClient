@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "teslaclient",
+  "name": "TeslaClient",
+  "version": "1.0.0",
+  "description": "A Minecraft client mod",
+  "authors": ["Bieme"],
+  "contact": {
+    "homepage": "https://example.com",
+    "sources": "https://github.com/example/teslaclient"
+  },
+  "license": "MIT",
+  "entrypoints": {
+    "main": ["com.bieme.tesla.TeslaMod"],
+    "client": ["com.bieme.tesla.TeslaMod"]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.1",
+    "minecraft": "1.21.11"
+  }
+}
