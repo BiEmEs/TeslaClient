@@ -8,8 +8,6 @@ import com.bieme.tesla.other.guiscreen.render.components.ModuleButton;
 import com.bieme.tesla.other.guiscreen.settings.Setting;
 import net.minecraft.client.gui.GuiGraphics;
 
-import java.awt.Color;
-
 public class Label extends AbstractWidget {
     private Frame frame;
     private ModuleButton master;
@@ -45,7 +43,10 @@ public class Label extends AbstractWidget {
 
         this.label_name = this.setting.getName();
 
-        if (this.setting.getName().equalsIgnoreCase("info")) {
+        // Wurstplus-style: si el displayName fue "info" el tipo queda marcado como "info"
+        // y se renderiza solo el valor (sin el prefijo name: "value").
+        if ("info".equalsIgnoreCase(this.setting.type)
+                || this.setting.getName().equalsIgnoreCase("info")) {
             this.info = true;
         }
 

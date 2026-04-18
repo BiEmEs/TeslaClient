@@ -5,6 +5,8 @@ import com.bieme.tesla.modules.hacks.Category;
 import com.bieme.tesla.modules.hacks.Module;
 import com.bieme.tesla.other.guiscreen.render.components.widgets.Toggle;
 import com.bieme.tesla.other.guiscreen.render.components.widgets.Slider;
+import com.bieme.tesla.other.guiscreen.render.components.widgets.Label;
+import com.bieme.tesla.other.guiscreen.render.components.widgets.Combobox;
 import com.bieme.tesla.other.guiscreen.render.components.widgets.ButtonBind;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -34,10 +36,16 @@ public class Frame {
                 if (module.getCategory() == category) {
                     ModuleButton mb = new ModuleButton(module, this);
                     moduleButtons.add(mb);
+
                     if (!module.getTag().equals("gui") && module.getSettings() != null) {
                         for (var setting : module.getSettings()) {
-                            if ("slider".equals(setting.type)) {
+                            String type = setting.type;
+                            if ("slider".equals(type)) {
                                 mb.add_widget(new Slider(this, mb, setting.get_name(), 0));
+                            } else if ("info".equals(type) || "string".equals(type)) {
+                                mb.add_widget(new Label(this, mb, setting.get_name(), 0));
+                            } else if ("combobox".equals(type)) {
+                                mb.add_widget(new Combobox(this, mb, setting.get_name(), 0));
                             } else {
                                 mb.add_widget(new Toggle(this, mb, setting.get_name(), 0));
                             }

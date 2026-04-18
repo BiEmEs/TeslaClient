@@ -91,6 +91,16 @@ public class ModuleButton {
     public void mouse(int mx, int my, int mouse) {
         if (motion(mx, my)) {
             master.does_can(false);
+
+            // El módulo HUD no se togglea inline: abre el editor visual (ClientHud)
+            if (mouse == 0 && "HUD".equalsIgnoreCase(module.getName())) {
+                if (Client.clickHud != null) {
+                    Client.clickHud.back = true;
+                    Minecraft.getInstance().setScreen(Client.clickHud);
+                }
+                return;
+            }
+
             if (mouse == 0) set_pressed(!get_state());
             if (mouse == 1) {
                 set_open(!is_open());

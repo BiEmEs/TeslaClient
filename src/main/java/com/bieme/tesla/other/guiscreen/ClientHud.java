@@ -3,10 +3,13 @@ package com.bieme.tesla.other.guiscreen;
 import com.bieme.tesla.Client;
 import com.bieme.tesla.other.guiscreen.render.pinnables.PinnableFrame;
 import com.bieme.tesla.other.guiscreen.render.pinnables.PinnableButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import org.lwjgl.glfw.GLFW;
 
 public class ClientHud extends Screen {
     private final PinnableFrame frame;
@@ -72,16 +75,36 @@ public class ClientHud extends Screen {
         com.bieme.tesla.modules.hacks.Module guiMod = Client.getHackManager().get_module_with_tag("GUI");
         com.bieme.tesla.modules.hacks.Module hudMod = Client.getHackManager().get_module_with_tag("HUD");
 
-        if (this.back) {
-            if (guiMod != null) guiMod.setEnabled(true);
-            if (hudMod != null) hudMod.setEnabled(false);
-        } else {
-            if (hudMod != null) hudMod.setEnabled(false);
-            if (guiMod != null) guiMod.setEnabled(false);
+        boolean goBack = this.back;
+        this.back = false;
+        this.on_gui = false;
+
+        // El editor se cierra: el módulo HUD no debería seguir "activo" en el sentido del toggle del GUI.
+        if (hudMod != null) hudMod.setEnabled(false);
+
+        if (Client.getConfigManager() != null) {
+            Client.getConfigManager().saveSettings();
         }
 
-        this.on_gui = false;
-        Client.getConfigManager().saveSettings();
+        Minecraft mc = Minecraft.getInstance();
+        if (goBack) {
+            // Volvemos al ClickGUI, reactivando el módulo GUI.
+            if (guiMod != null) guiMod.setEnabled(true);
+            mc.setScreen(Client.clickGui != null ? Client.clickGui : new ClientGui());
+        } else {
+            // Cierre directo (sin pasar por el ClickGUI).
+            if (guiMod != null) guiMod.setEnabled(false);
+            mc.setScreen(null);
+        }
+    }
+
+    @Override
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+            this.onClose();
+            return true;
+        }
+        return super.keyPressed(event);
     }
 
     @Override
@@ -113,7 +136,6 @@ public class ClientHud extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mx, int my, float tick) {
-        this.renderBackground(guiGraphics, mx, my, tick);
         this.frame.render(guiGraphics, mx, my, 2);
     }
 }

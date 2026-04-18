@@ -1,10 +1,10 @@
 package com.bieme.tesla.modules.hacks;
 
-import com.bieme.tesla.modules.hacks.Category;
-import com.bieme.tesla.other.guiscreen.settings.Setting;
 import com.bieme.tesla.Client;
+import com.bieme.tesla.other.guiscreen.settings.Setting;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Module {
@@ -81,17 +81,19 @@ public class Module {
         return settings;
     }
 
+    // Toggle
     public void create(String displayName, String settingName, boolean value) {
         Setting setting = new Setting(settingName, value);
         setting.display_name = displayName;
         setting.type = "toggle";
         settings.add(setting);
-        
+
         if (Client.getSettingManager() != null) {
             Client.getSettingManager().register(this, setting);
         }
     }
 
+    // Slider
     public void create(String displayName, String settingName, double value, double min, double max) {
         Setting setting = new Setting(settingName, value);
         setting.setMin(min);
@@ -99,9 +101,39 @@ public class Module {
         setting.display_name = displayName;
         setting.type = "slider";
         settings.add(setting);
-        
+
         if (Client.getSettingManager() != null) {
             Client.getSettingManager().register(this, setting);
         }
+    }
+
+    // String / info label  ej. create("info", "HUDStringsList", "Strings")
+    public void create(String displayName, String settingName, String value) {
+        Setting setting = new Setting(settingName, value);
+        setting.display_name = displayName;
+        setting.type = "info".equalsIgnoreCase(displayName) ? "info" : "string";
+        settings.add(setting);
+
+        if (Client.getSettingManager() != null) {
+            Client.getSettingManager().register(this, setting);
+        }
+    }
+
+    // Combobox  (ej. create("ArrayList", "HUDArrayList", "Free", combobox("Free","Top R",...)))
+    public void create(String displayName, String settingName, String defaultValue, List<String> options) {
+        Setting setting = new Setting(settingName, defaultValue);
+        setting.display_name = displayName;
+        setting.type = "combobox";
+        setting.set_values(options);
+        settings.add(setting);
+
+        if (Client.getSettingManager() != null) {
+            Client.getSettingManager().register(this, setting);
+        }
+    }
+
+    // Helper para construir la lista de opciones del combobox
+    public static List<String> combobox(String... options) {
+        return new ArrayList<>(Arrays.asList(options));
     }
 }
