@@ -2,6 +2,10 @@ package com.bieme.tesla.other.guiscreen.render.components;
 
 import com.bieme.tesla.Client;
 import com.bieme.tesla.modules.hacks.Module;
+import com.bieme.tesla.modules.hacks.client.GUI;
+import com.bieme.tesla.other.guiscreen.render.components.widgets.Toggle;
+import com.bieme.tesla.other.guiscreen.render.components.widgets.Slider;
+import com.bieme.tesla.other.guiscreen.render.components.widgets.ButtonBind;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
@@ -17,6 +21,7 @@ public class ModuleButton {
     private int x, y;
     private int width, height;
     private int save_y;
+    private int save_x;
     private int settings_height;
     private int cachedWidth;
     private int next_widget_y;
@@ -30,16 +35,17 @@ public class ModuleButton {
 
         this.width = 100;
         this.cachedWidth = this.width;
-        this.height = 10;
+        this.height = Minecraft.getInstance().font.lineHeight + 2;
         this.save_y = 0;
-        this.settings_height = 10;
+        this.save_x = 0;
+        this.settings_height = 0;
         this.next_widget_y = this.height;
     }
 
     public void add_widget(AbstractWidget w) {
         w.set_y(next_widget_y);
         widget.add(w);
-        int h = w.get_height() > 0 ? w.get_height() : 10;
+        int h = w.get_height() > 0 ? w.get_height() : (Minecraft.getInstance().font.lineHeight + 2);
         next_widget_y += h;
         settings_height += h;
     }
@@ -74,6 +80,10 @@ public class ModuleButton {
         for (AbstractWidget w : widget) w.does_can(can);
     }
 
+    public void does_button_for_do_widgets_can(boolean can) {
+        does_widgets_can(can);
+    }
+
     public boolean motion(int mx, int my) {
         return mx >= x && my >= save_y && mx <= x + width && my <= save_y + height;
     }
@@ -90,6 +100,7 @@ public class ModuleButton {
 
         if (is_open()) {
             for (AbstractWidget w : widget) {
+                w.set_x(this.x + 2);
                 w.mouse(mx, my, mouse);
             }
         }
@@ -113,20 +124,18 @@ public class ModuleButton {
     }
 
     public void render(GuiGraphics gui, int mx, int my, int separe) {
-        set_width(cachedWidth - separe);
-        save_y = y + master.get_y();
+        if (Client.clickGui == null) {
+            return;
+        }
 
-        int nm_r = Client.clickGui.theme_widget_name_r;
-        int nm_g = Client.clickGui.theme_widget_name_g;
-        int nm_b = Client.clickGui.theme_widget_name_b;
-        int nm_a = Client.clickGui.theme_widget_name_a;
+        set_width(cachedWidth - separe);
+        this.save_x = this.x;
+        this.save_y = master.get_y() + this.y;
 
         int bg_r = Client.clickGui.theme_widget_background_r;
         int bg_g = Client.clickGui.theme_widget_background_g;
         int bg_b = Client.clickGui.theme_widget_background_b;
-        int bg_a = Client.clickGui.theme_widget_background_a;
 
-        int color_name = (nm_a << 24) | (nm_r << 16) | (nm_g << 8) | nm_b;
         int color_bg_on = Client.clickGui.getAccentColor(save_y, Math.abs(module_name.hashCode() % 20));
         int color_bg_hover = (100 << 24) | (bg_r << 16) | (bg_g << 8) | bg_b;
 
@@ -136,11 +145,23 @@ public class ModuleButton {
             gui.fill(this.x, this.save_y, this.x + this.width, this.save_y + this.height, color_bg_hover);
         }
 
-        gui.drawString(Minecraft.getInstance().font, this.module_name, this.x + separe, this.save_y, color_name);
+        int textColor;
+        if (module.isEnabled()) {
+            textColor = color_bg_on;
+        } else {
+            int nm_r = Client.clickGui.theme_widget_name_r;
+            int nm_g = Client.clickGui.theme_widget_name_g;
+            int nm_b = Client.clickGui.theme_widget_name_b;
+            int nm_a = Client.clickGui.theme_widget_name_a;
+            textColor = (nm_a << 24) | (nm_r << 16) | (nm_g << 8) | nm_b;
+        }
+
+        gui.drawString(Minecraft.getInstance().font, this.module_name, this.x + separe, this.save_y + 1, textColor);
 
         if (is_open()) {
             for (AbstractWidget w : widget) {
-                w.render(gui, save_y, separe, mx, my);
+                w.set_x(this.x + separe);
+                w.render(gui, save_y, 0, mx, my);
             }
         }
     }

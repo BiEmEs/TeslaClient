@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 public class TeslaMod implements ModInitializer, ClientModInitializer {
     private static final Logger LOGGER = LogManager.getLogger();
+    private static boolean lastKeyState = false;
 
     @Override
     public void onInitialize() {
@@ -19,24 +20,23 @@ public class TeslaMod implements ModInitializer, ClientModInitializer {
         LOGGER.info("TeslaClient loaded on client!");
         Client.init();
     }
-    
-    private static boolean bindingInGUI = false;
 
-    public static void setBindingInGUI(boolean value) { bindingInGUI = value; }
-    public static boolean isBindingInGUI() { return bindingInGUI; }
-
-    public static void toggleGui() {
+    public static void onKeyPress() {
         Minecraft mc = Minecraft.getInstance();
-        
-        if (mc.player == null) return;
-        
+
         if (mc.screen == null) {
-            com.bieme.tesla.other.guiscreen.ClientGui gui = new com.bieme.tesla.other.guiscreen.ClientGui();
-            mc.setScreen(gui);
+            mc.setScreen(new com.bieme.tesla.other.guiscreen.ClientGui());
             LOGGER.info("Opening Tesla GUI!");
         } else {
             mc.screen.onClose();
             LOGGER.info("Closing GUI!");
         }
+    }
+
+    public static void setBindingInGUI(boolean value) {
+    }
+
+    public static boolean isBindingInGUI() {
+        return false;
     }
 }

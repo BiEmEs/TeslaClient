@@ -3,6 +3,9 @@ package com.bieme.tesla.other.guiscreen.render.components;
 import com.bieme.tesla.Client;
 import com.bieme.tesla.modules.hacks.Category;
 import com.bieme.tesla.modules.hacks.Module;
+import com.bieme.tesla.other.guiscreen.render.components.widgets.Toggle;
+import com.bieme.tesla.other.guiscreen.render.components.widgets.Slider;
+import com.bieme.tesla.other.guiscreen.render.components.widgets.ButtonBind;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
@@ -16,9 +19,7 @@ public class Frame {
 
     private int x, y, width, height;
     private boolean open = true;
-    private boolean dragging = false;
-    private boolean move;
-    private int dragX, dragY;
+    private boolean can = true;
 
     @SuppressWarnings("this-escape")
     public Frame(Category category, int x, int y) {
@@ -31,7 +32,18 @@ public class Frame {
         if (Client.getHackManager() != null) {
             for (Module module : Client.getHackManager().getModules()) {
                 if (module.getCategory() == category) {
-                    moduleButtons.add(new ModuleButton(module, this));
+                    ModuleButton mb = new ModuleButton(module, this);
+                    moduleButtons.add(mb);
+                    if (!module.getTag().equals("gui") && module.getSettings() != null) {
+                        for (var setting : module.getSettings()) {
+                            if ("slider".equals(setting.type)) {
+                                mb.add_widget(new Slider(this, mb, setting.get_name(), 0));
+                            } else {
+                                mb.add_widget(new Toggle(this, mb, setting.get_name(), 0));
+                            }
+                        }
+                        mb.add_widget(new ButtonBind(this, mb, "Bind", 0));
+                    }
                 }
             }
         }
@@ -42,21 +54,24 @@ public class Frame {
     public void refresh_frame(ModuleButton button, int offset) {
         this.height = HEADER_HEIGHT;
 
+        int fontHeight = Minecraft.getInstance().font.lineHeight + 2;
+
         for (ModuleButton buttons : moduleButtons) {
             buttons.set_y(this.height);
             if (buttons.is_open()) {
                 this.height += buttons.getSettingsHeight();
             } else {
-                this.height += 10;
+                this.height += fontHeight;
             }
         }
     }
 
     public void render(GuiGraphics gui, int mouseX, int mouseY, int offset) {
-        if (move && dragging) {
-            set_x(mouseX - dragX);
-            set_y(mouseY - dragY);
+        if (Client.clickGui == null) {
+            return;
         }
+
+        refresh_frame(null, 0);
 
         int bg_r = Client.clickGui.theme_frame_background_r;
         int bg_g = Client.clickGui.theme_frame_background_g;
@@ -79,12 +94,6 @@ public class Frame {
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (isHoverHeader(mouseX, mouseY)) {
-            if (mouseButton == 0) {
-                dragging = true;
-                move = true;
-                dragX = mouseX - x;
-                dragY = mouseY - y;
-            }
             if (mouseButton == 1) {
                 open = !open;
             }
@@ -97,13 +106,6 @@ public class Frame {
         }
     }
 
-    public void mouseDragged(int mouseX, int mouseY) {
-        if (dragging) {
-            x = mouseX - dragX;
-            y = mouseY - dragY;
-        }
-    }
-
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (isBinding()) {
             bindKey(keyCode);
@@ -111,12 +113,18 @@ public class Frame {
         return false;
     }
 
-    public void mouseReleased(int mouseX, int mouseY, int state) {
-        dragging = false;
-        move = false;
+    public void mouse(int mouseX, int mouseY, int mouseButton) {
+        mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    public void mouse_release(int mouseX, int mouseY, int state) {
         for (ModuleButton buttons : moduleButtons) {
             buttons.release(mouseX, mouseY, state);
         }
+    }
+
+    public boolean is_binding() {
+        return isBinding();
     }
 
     private boolean isHoverHeader(int mouseX, int mouseY) {
@@ -139,13 +147,6 @@ public class Frame {
 
     public void set_x(int x) { this.x = x; }
     public void set_y(int y) { this.y = y; }
-
-    public void setMove(boolean move) { this.move = move; }
-    public boolean isMoving() { return move; }
-    public void set_move_x(int x) { this.dragX = x; }
-    public void set_move_y(int y) { this.dragY = y; }
-    public int get_move_x() { return dragX; }
-    public int get_move_y() { return dragY; }
 
     public void does_can(boolean value) {
         for (ModuleButton buttons : moduleButtons) {
@@ -183,4 +184,7 @@ public class Frame {
 
     public String get_tag() { return category.name(); }
     public String get_name() { return category.name(); }
+
+    public boolean can() { return can; }
+    public void can(boolean value) { this.can = value; }
 }

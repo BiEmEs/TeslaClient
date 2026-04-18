@@ -1,10 +1,10 @@
 package com.bieme.tesla.other.guiscreen.render.components.widgets;
 
 import com.bieme.tesla.Client;
-import com.bieme.tesla.other.guiscreen.render.ClientDraw;
 import com.bieme.tesla.other.guiscreen.render.components.AbstractWidget;
 import com.bieme.tesla.other.guiscreen.render.components.Frame;
 import com.bieme.tesla.other.guiscreen.render.components.ModuleButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
 public class ButtonBind extends AbstractWidget {
@@ -18,30 +18,28 @@ public class ButtonBind extends AbstractWidget {
 
     private int x;
     private int y;
+    private int save_x;
+    private int save_y;
 
     private int width;
     private int height;
-
-    private int save_y;
 
     private float tick;
 
     private boolean can = true;
     private boolean waiting;
 
-    private final ClientDraw font = new ClientDraw(1);
-
     public ButtonBind(Frame frame, ModuleButton master, String tag, int update_position) {
         this.frame = frame;
         this.master = master;
 
-        this.x = master.get_x();
+        this.x = 0;
         this.y = update_position;
-
+        this.save_x = 0;
         this.save_y = this.y;
 
-        this.width = master.get_width();
-        this.height = font.getStringHeight();
+        this.width = 0;
+        this.height = Minecraft.getInstance().font.lineHeight + 2;
 
         this.button_name = tag;
     }
@@ -95,13 +93,17 @@ public class ButtonBind extends AbstractWidget {
         return this.save_y;
     }
 
+    public int get_save_x() {
+        return this.save_x;
+    }
+
     @Override
     public boolean motion_pass(int mx, int my) {
         return motion(mx, my);
     }
 
     public boolean motion(int mx, int my) {
-        return mx >= get_x() && my >= get_save_y() && mx <= get_x() + get_width() && my <= get_save_y() + get_height();
+        return mx >= get_save_x() && my >= get_save_y() && mx <= get_save_x() + get_width() && my <= get_save_y() + get_height();
     }
 
     public boolean can() {
@@ -145,18 +147,12 @@ public class ButtonBind extends AbstractWidget {
         set_width(this.master.get_width() - separe);
 
         this.save_y = this.y + master_y;
+        this.save_x = this.x;
 
         int ns_r = Client.clickGui.theme_widget_name_r;
         int ns_g = Client.clickGui.theme_widget_name_g;
         int ns_b = Client.clickGui.theme_widget_name_b;
         int ns_a = Client.clickGui.theme_widget_name_a;
-
-        int bg_r = Client.clickGui.theme_widget_background_r;
-        int bg_g = Client.clickGui.theme_widget_background_g;
-        int bg_b = Client.clickGui.theme_widget_background_b;
-        int bg_a = Client.clickGui.theme_widget_background_a;
-
-        ClientDraw.draw_rect(gui, get_x(), this.save_y, get_x() + this.width, this.save_y + this.height, bg_r, bg_g, bg_b, bg_a);
 
         if (this.waiting) {
             this.tick += 0.5f;
@@ -168,13 +164,13 @@ public class ButtonBind extends AbstractWidget {
                 this.tick = 0.0f;
             }
 
-            ClientDraw.draw_string(gui, "Listening " + this.points, this.x + 2, this.save_y, ns_r, ns_g, ns_b, ns_a);
+            gui.drawString(Minecraft.getInstance().font, "Listening " + this.points, this.save_x + 2, this.save_y + 1, (ns_a << 24) | (ns_r << 16) | (ns_g << 8) | ns_b);
         } else {
             String bindString = this.master.get_module().getBind("string");
             if (bindString == null || bindString.equals("0") || bindString.isEmpty()) {
                 bindString = "None";
             }
-            ClientDraw.draw_string(gui, "Bind " + bindString, this.x + 2, this.save_y, ns_r, ns_g, ns_b, ns_a);
+            gui.drawString(Minecraft.getInstance().font, "Bind " + bindString, this.save_x + 2, this.save_y + 1, (ns_a << 24) | (ns_r << 16) | (ns_g << 8) | ns_b);
         }
     }
 

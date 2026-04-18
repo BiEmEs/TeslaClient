@@ -1,25 +1,38 @@
 package com.bieme.tesla.other.guiscreen.settings;
 
+import com.bieme.tesla.modules.hacks.Module;
+
 public class Setting {
     private String name;
     private Object value;
     private Object defaultValue;
-    private String type = "toggle";
+    public String type = "toggle";
     private double min = 0, max = 100;
     private String currentValue = "";
     private java.util.List<String> values = null;
+    
+    public String setting_name;
+    public String display_name;
+    public boolean slider;
+    public Module master;
+
+    public Setting() {
+    }
 
     public Setting(String name, Object value) {
         this.name = name;
         this.value = value;
         this.defaultValue = value;
+        this.setting_name = name;
     }
 
     public String getName() { return name; }
+    public String getTag() { return setting_name; }
     public String get_type() { return type; }
     public Object getValue() { return value; }
     public void setValue(Object v) { this.value = v; }
     public Object getDefaultValue() { return defaultValue; }
+    public Module getMaster() { return master; }
     
     public boolean getBoolValue() {
         if (value instanceof Boolean) return (Boolean) value;
@@ -37,6 +50,8 @@ public class Setting {
     }
     
     public double getMin() { return min; }
+    public void setMin(double min) { this.min = min; }
+    public void setMax(double max) { this.max = max; }
     public double getMax() { return max; }
     public String getStringValue() {
         if (value != null) return value.toString();

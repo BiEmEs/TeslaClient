@@ -1,12 +1,12 @@
 package com.bieme.tesla.modules.hacks;
 
 public enum Category {
-    COMBAT(false),
-    MISC(false),
-    RENDER(false),
-    CLIENT(false),
-    MOVEMENT(false),
     HUD(true),
+    COMBAT(false),
+    MOVEMENT(false),
+    RENDER(false),
+    MISC(false),
+    CLIENT(false),
     GUI(true);
 
     private final boolean hidden;

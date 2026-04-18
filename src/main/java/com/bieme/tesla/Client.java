@@ -40,15 +40,12 @@ public class Client {
         hackManager = new ManagerHack();
         commandManager = new ManagerCommand();
         settingManager = new ManagerSetting();
-
-        // Register modules
-        hackManager.register(new com.bieme.tesla.modules.hacks.combat.KillAura());
-        hackManager.register(new com.bieme.tesla.modules.utils.player.fakeplayer.Stewart());
         
         clickGui = new ClientGui();
         clickHud = new ClientHud();
         
         commandManager.init();
+        hackManager.init();
         
         LOGGER.info("TeslaClient {} by {} initialized!", CLIENT_NAME, CLIENT_AUTHOR);
     }
