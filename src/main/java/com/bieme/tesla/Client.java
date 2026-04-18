@@ -5,6 +5,7 @@ import com.bieme.tesla.other.manager.ManagerCommand;
 import com.bieme.tesla.other.manager.ManagerConfig;
 import com.bieme.tesla.other.manager.ManagerSetting;
 import com.bieme.tesla.other.guiscreen.ClientGui;
+import com.bieme.tesla.other.guiscreen.ClientHud;
 import com.bieme.tesla.modules.hacks.Module;
 import com.bieme.tesla.modules.hacks.Category;
 import net.minecraft.client.Minecraft;
@@ -30,7 +31,7 @@ public class Client {
     private static ManagerSetting settingManager;
     
     public static ClientGui clickGui;
-    public static ClientGui click_hud;
+    public static ClientHud clickHud;
 
     public static void init() {
         mc = Minecraft.getInstance();
@@ -45,7 +46,7 @@ public class Client {
         hackManager.register(new com.bieme.tesla.modules.utils.player.fakeplayer.Stewart());
         
         clickGui = new ClientGui();
-        click_hud = clickGui;
+        clickHud = new ClientHud();
         
         commandManager.init();
         

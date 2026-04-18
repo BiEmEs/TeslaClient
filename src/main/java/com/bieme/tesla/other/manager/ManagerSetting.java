@@ -38,6 +38,10 @@ public class ManagerSetting {
                 return s;
             }
         }
-        return null;
+        return new Setting(settingTag, "");
+    }
+
+    public Setting getSettingByTag(String moduleTag, String settingTag) {
+        return get_setting_with_tag(moduleTag, settingTag);
     }
 }

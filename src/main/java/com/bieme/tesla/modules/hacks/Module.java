@@ -55,6 +55,9 @@ public class Module {
     public void onUpdate() {
     }
 
+    public void setActive(boolean value) { setEnabled(value); }
+    public boolean isActive() { return enabled; }
+
     public String get_tag() { return name.toLowerCase().replace(" ", "_"); }
     public void setBind(int key) { this.bind = key; }
     public int getBind() { return this.bind; }

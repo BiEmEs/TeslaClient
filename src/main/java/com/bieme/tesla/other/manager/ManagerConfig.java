@@ -14,4 +14,8 @@ public class ManagerConfig {
 
     public void load() {
     }
+
+    public void saveSettings() {
+        save();
+    }
 }

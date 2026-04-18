@@ -7,6 +7,7 @@ public class Setting {
     private String type = "toggle";
     private double min = 0, max = 100;
     private String currentValue = "";
+    private java.util.List<String> values = null;
 
     public Setting(String name, Object value) {
         this.name = name;
@@ -48,4 +49,7 @@ public class Setting {
     public String get_name() { return name; }
     public void set_value(Object v) { this.value = v; }
     public Object get_value(boolean asBool) { return asBool ? getBoolValue() : value; }
+
+    public java.util.List<String> get_values() { return values; }
+    public void set_values(java.util.List<String> v) { this.values = v; }
 }

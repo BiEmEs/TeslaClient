@@ -24,4 +24,11 @@ public class ManagerHack {
     public ArrayList<Module> getModules() {
         return modules;
     }
+
+    public Module get_module_with_tag(String tag) {
+        for (Module m : modules) {
+            if (m.get_tag().equalsIgnoreCase(tag)) return m;
+        }
+        return null;
+    }
 }

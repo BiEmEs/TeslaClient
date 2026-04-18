@@ -1,99 +1,81 @@
 package com.bieme.tesla.other.guiscreen;
 
+import com.bieme.tesla.Client;
+import com.bieme.tesla.other.guiscreen.render.components.Frame;
+import com.bieme.tesla.modules.hacks.Category;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 
 public class ClientGui extends Screen {
 
-    public enum ColorMode { STATIC, RAINBOW, SATURATION, BRIGHTNESS, HEIGHT }
+    private ArrayList<Frame> frame;
+    private Minecraft mc;
 
-    private final ArrayList<com.bieme.tesla.other.guiscreen.render.components.Frame> frame = new ArrayList<>();
-    private final Minecraft mc;
+    public boolean on_gui;
+    private int frame_x = 10;
+    private Frame current;
 
-    public boolean on_gui = true;
+    public int theme_frame_name_r         = 255;
+    public int theme_frame_name_g         = 105;
+    public int theme_frame_name_b         = 180;
+    public int theme_frame_name_a         = 255;
 
-    // Color mode
-    public ColorMode colorMode = ColorMode.STATIC;
-    public float colorHue        = 0.72f;  // base hue (purple)
-    public float colorSaturation = 1.0f;
-    public float colorBrightness = 1.0f;
-    public float colorSpeed      = 1.0f;
+    public int theme_frame_background_r   = 30;
+    public int theme_frame_background_g   = 20;
+    public int theme_frame_background_b   = 30;
+    public int theme_frame_background_a   = 240;
 
-    // Frame theme
-    public int theme_frame_name_r = 255;
-    public int theme_frame_name_g = 105;
-    public int theme_frame_name_b = 180;
-    public int theme_frame_name_a = 255;
+    public int theme_frame_border_r       = 255;
+    public int theme_frame_border_g       = 105;
+    public int theme_frame_border_b       = 180;
+    public int theme_frame_border_a       = 255;
 
-    public int theme_frame_background_r = 30;
-    public int theme_frame_background_g = 20;
-    public int theme_frame_background_b = 30;
-    public int theme_frame_background_a = 240;
+    public int theme_frame_border_size    = 1;
 
-    // Widget theme
-    public int theme_widget_background_r = 45;
-    public int theme_widget_background_g = 30;
-    public int theme_widget_background_b = 45;
-    public int theme_widget_background_a = 200;
+    public int theme_widget_name_r        = 255;
+    public int theme_widget_name_g        = 255;
+    public int theme_widget_name_b        = 255;
+    public int theme_widget_name_a        = 255;
 
-    public int theme_widget_name_r = 255;
-    public int theme_widget_name_g = 255;
-    public int theme_widget_name_b = 255;
-    public int theme_widget_name_a = 255;
+    public int theme_widget_background_r  = 45;
+    public int theme_widget_background_g  = 30;
+    public int theme_widget_background_b  = 45;
+    public int theme_widget_background_a  = 200;
+
+    public int theme_widget_border_r      = 255;
+    public int theme_widget_border_g      = 105;
+    public int theme_widget_border_b      = 180;
 
     public ClientGui() {
         super(Component.literal("Tesla GUI"));
         this.mc = Minecraft.getInstance();
+        this.frame = new ArrayList<>();
+        this.frame_x = 10;
     }
 
-    /**
-     * Returns the accent color for the current color mode.
-     * @param y screen Y of the element (used by HEIGHT mode)
-     * @param index element index for horizontal rainbow offset
-     */
     public int getAccentColor(int y, int index) {
-        float hue, sat, bri;
-        long time = System.currentTimeMillis();
+        return (theme_frame_name_a << 24)
+             | (theme_frame_name_r << 16)
+             | (theme_frame_name_g << 8)
+             |  theme_frame_name_b;
+    }
 
-        switch (colorMode) {
-            case RAINBOW -> {
-                hue = ((time * colorSpeed * 0.0005f) + index * 0.05f) % 1.0f;
-                sat = colorSaturation;
-                bri = colorBrightness;
-            }
-            case SATURATION -> {
-                hue = colorHue;
-                sat = (float)(Math.sin(time * colorSpeed * 0.001f) * 0.5 + 0.5);
-                bri = colorBrightness;
-            }
-            case BRIGHTNESS -> {
-                hue = colorHue;
-                sat = colorSaturation;
-                bri = (float)(Math.sin(time * colorSpeed * 0.001f) * 0.4 + 0.6);
-            }
-            case HEIGHT -> {
-                int screenH = mc.getWindow().getGuiScaledHeight();
-                hue = (screenH > 0 ? (float) y / screenH : 0f) % 1.0f;
-                sat = colorSaturation;
-                bri = colorBrightness;
-            }
-            default -> { // STATIC
-                return (theme_frame_name_a << 24)
-                     | (theme_frame_name_r << 16)
-                     | (theme_frame_name_g << 8)
-                     |  theme_frame_name_b;
-            }
+    public void updateThemeColors() {
+        com.bieme.tesla.modules.hacks.Module guiModule = Client.getHackManager().get_module_with_tag("GUI");
+        if (guiModule != null) {
+            com.bieme.tesla.other.guiscreen.settings.Setting frameR = Client.getSettingManager().get_setting_with_tag("GUI", "GUITFrameNameR");
+            com.bieme.tesla.other.guiscreen.settings.Setting frameG = Client.getSettingManager().get_setting_with_tag("GUI", "GUITFrameNameG");
+            com.bieme.tesla.other.guiscreen.settings.Setting frameB = Client.getSettingManager().get_setting_with_tag("GUI", "GUITFrameNameB");
+            if (frameR != null) this.theme_frame_name_r = (int) frameR.getSliderValue();
+            if (frameG != null) this.theme_frame_name_g = (int) frameG.getSliderValue();
+            if (frameB != null) this.theme_frame_name_b = (int) frameB.getSliderValue();
         }
-
-        return Color.HSBtoRGB(hue, sat, bri);
     }
 
     @Override
@@ -102,10 +84,16 @@ public class ClientGui extends Screen {
         this.on_gui = true;
 
         if (frame.isEmpty()) {
-            int x = 10;
-            for (com.bieme.tesla.modules.hacks.Category category : com.bieme.tesla.modules.hacks.Category.values()) {
-                frame.add(new com.bieme.tesla.other.guiscreen.render.components.Frame(category, x, 10));
-                x += 110;
+            this.frame_x = 10;
+            for (Category category : Category.values()) {
+                if (category.is_hidden()) continue;
+                Frame f = new Frame(category, this.frame_x, 10);
+                this.frame.add(f);
+                this.frame_x += f.get_width() + 5;
+            }
+
+            if (!this.frame.isEmpty()) {
+                this.current = this.frame.get(0);
             }
         }
     }
@@ -116,54 +104,127 @@ public class ClientGui extends Screen {
     }
 
     @Override
-    public void onClose() {
-        this.on_gui = false;
-        this.mc.setScreen(null);
-    }
-
-    @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        for (com.bieme.tesla.other.guiscreen.render.components.Frame f : this.frame) {
-            f.render(guiGraphics, mouseX, mouseY, 0);
-        }
+    public void removed() {
+        com.bieme.tesla.modules.hacks.Module guiModule = Client.getHackManager().get_module_with_tag("GUI");
+        if (guiModule != null) guiModule.setActive(false);
     }
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
-            mc.setScreen(null);
-            return true;
+        int keyCode = event.key();
+        boolean isDraggingAny = false;
+
+        for (Frame f : this.frame) {
+            if (f.isMoving()) {
+                isDraggingAny = true;
+                break;
+            }
         }
-        for (com.bieme.tesla.other.guiscreen.render.components.Frame f : this.frame) {
-            f.keyPressed(event.key(), event.scancode(), event.modifiers());
+
+        for (Frame f : this.frame) {
+            if (!isDraggingAny && f.isBinding()) {
+                f.bind(keyCode);
+            }
+
+            if (keyCode == org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE) {
+                if (f.isBinding()) {
+                    f.bind(1);
+                } else if (!isDraggingAny) {
+                    mc.setScreen(null);
+                    return true;
+                }
+            }
         }
         return super.keyPressed(event);
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean consumed) {
-        for (com.bieme.tesla.other.guiscreen.render.components.Frame f : this.frame) {
-            f.mouseClicked((int) event.x(), (int) event.y(), event.button());
+        int mx = (int) event.x();
+        int my = (int) event.y();
+        int button = event.button();
+
+        boolean handled = false;
+        for (Frame f : this.frame) {
+            if (f.motion(mx, my)) {
+                f.mouseClicked(mx, my, button);
+                this.current = f;
+                handled = true;
+                break;
+            }
         }
-        return super.mouseClicked(event, consumed);
+        return handled || super.mouseClicked(event, consumed);
     }
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
-        for (com.bieme.tesla.other.guiscreen.render.components.Frame f : this.frame) {
-            f.mouseReleased((int) event.x(), (int) event.y(), event.button());
+        int mx = (int) event.x();
+        int my = (int) event.y();
+        int button = event.button();
+
+        for (Frame f : this.frame) {
+            f.mouseReleased(mx, my, button);
+            for (com.bieme.tesla.other.guiscreen.render.components.ModuleButton mb : f.get_module_buttons()) {
+                mb.release(mx, my, button);
+            }
+            f.setMove(false);
         }
+        set_current(this.current);
         return super.mouseReleased(event);
     }
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double deltaX, double deltaY) {
-        for (com.bieme.tesla.other.guiscreen.render.components.Frame f : this.frame) {
-            f.mouseDragged((int) event.x(), (int) event.y());
+        int mx = (int) event.x();
+        int my = (int) event.y();
+
+        for (Frame f : this.frame) {
+            f.mouseDragged(mx, my);
         }
         return super.mouseDragged(event, deltaX, deltaY);
     }
 
-    public Minecraft getMinecraft() { return mc; }
-    public boolean isOnGui() { return on_gui; }
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        int scrollAmount = (int) verticalAmount;
+        for (Frame f : this.frame) {
+            f.onMouseScroll(scrollAmount);
+        }
+        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+    }
+
+    @Override
+    public void render(net.minecraft.client.gui.GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        updateThemeColors();
+        for (Frame f : this.frame) {
+            f.render(guiGraphics, mouseX, mouseY, 0);
+        }
+    }
+
+    public void set_current(Frame current) {
+        if (current != null) {
+            this.frame.remove(current);
+            this.frame.add(current);
+            this.current = current;
+        }
+    }
+
+    public Frame get_current() {
+        return this.current;
+    }
+
+    public ArrayList<Frame> get_array_frames() {
+        return this.frame;
+    }
+
+    public Frame get_frame_hud() {
+        return this.frame.stream()
+            .filter(f -> "HUD".equals(f.get_tag()))
+            .findFirst()
+            .orElse(null);
+    }
+
+    public ArrayList<Frame> get_array_huds() {
+        return get_array_frames();
+    }
 }

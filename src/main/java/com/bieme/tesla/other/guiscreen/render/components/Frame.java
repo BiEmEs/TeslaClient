@@ -169,6 +169,14 @@ public class Frame {
         return false;
     }
 
+    public void bind(int key) {
+        bindKey(key);
+    }
+
+    public void onMouseScroll(int amount) {
+        // reserved for future scrollable settings
+    }
+
     public ArrayList<ModuleButton> get_module_buttons() {
         return moduleButtons;
     }
