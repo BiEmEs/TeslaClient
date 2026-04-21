@@ -1,6 +1,7 @@
 package com.bieme.tesla.other.guiscreen;
 
 import com.bieme.tesla.Client;
+import com.bieme.tesla.other.guiscreen.render.pinnables.Pinnable;
 import com.bieme.tesla.other.guiscreen.render.pinnables.PinnableFrame;
 import com.bieme.tesla.other.guiscreen.render.pinnables.PinnableButton;
 import net.minecraft.client.Minecraft;
@@ -33,41 +34,62 @@ public class ClientHud extends Screen {
         return false;
     }
 
+    private void reloadColors() {
+        var sm = Client.getSettingManager();
+        // Frame colors — read from HUD module
+        PinnableFrame.nc_r  = (int) sm.getSettingByTag("HUD", "HUDFrameNameR").getSliderValue();
+        PinnableFrame.nc_g  = (int) sm.getSettingByTag("HUD", "HUDFrameNameG").getSliderValue();
+        PinnableFrame.nc_b  = (int) sm.getSettingByTag("HUD", "HUDFrameNameB").getSliderValue();
+        PinnableFrame.bg_r  = (int) sm.getSettingByTag("HUD", "HUDFrameBgR").getSliderValue();
+        PinnableFrame.bg_g  = (int) sm.getSettingByTag("HUD", "HUDFrameBgG").getSliderValue();
+        PinnableFrame.bg_b  = (int) sm.getSettingByTag("HUD", "HUDFrameBgB").getSliderValue();
+        PinnableFrame.bg_a  = (int) sm.getSettingByTag("HUD", "HUDFrameBgA").getSliderValue();
+        PinnableFrame.bd_r  = (int) sm.getSettingByTag("HUD", "HUDFrameBorderR").getSliderValue();
+        PinnableFrame.bd_g  = (int) sm.getSettingByTag("HUD", "HUDFrameBorderG").getSliderValue();
+        PinnableFrame.bd_b  = (int) sm.getSettingByTag("HUD", "HUDFrameBorderB").getSliderValue();
+        PinnableFrame.bd_a  = 0;
+        PinnableFrame.bdw_r = (int) sm.getSettingByTag("HUD", "HUDBtnBorderR").getSliderValue();
+        PinnableFrame.bdw_g = (int) sm.getSettingByTag("HUD", "HUDBtnBorderG").getSliderValue();
+        PinnableFrame.bdw_b = (int) sm.getSettingByTag("HUD", "HUDBtnBorderB").getSliderValue();
+        PinnableFrame.bdw_a = 255;
+        // Button (pinnable) colors — read from HUD module
+        PinnableButton.nc_r = (int) sm.getSettingByTag("HUD", "HUDBtnNameR").getSliderValue();
+        PinnableButton.nc_g = (int) sm.getSettingByTag("HUD", "HUDBtnNameG").getSliderValue();
+        PinnableButton.nc_b = (int) sm.getSettingByTag("HUD", "HUDBtnNameB").getSliderValue();
+        PinnableButton.bg_r = (int) sm.getSettingByTag("HUD", "HUDBtnBgR").getSliderValue();
+        PinnableButton.bg_g = (int) sm.getSettingByTag("HUD", "HUDBtnBgG").getSliderValue();
+        PinnableButton.bg_b = (int) sm.getSettingByTag("HUD", "HUDBtnBgB").getSliderValue();
+        PinnableButton.bg_a = (int) sm.getSettingByTag("HUD", "HUDBtnBgA").getSliderValue();
+        PinnableButton.bd_r = (int) sm.getSettingByTag("HUD", "HUDBtnBorderR").getSliderValue();
+        PinnableButton.bd_g = (int) sm.getSettingByTag("HUD", "HUDBtnBorderG").getSliderValue();
+        PinnableButton.bd_b = (int) sm.getSettingByTag("HUD", "HUDBtnBorderB").getSliderValue();
+    }
+
+    private boolean isBlurEnabled() {
+        var s = Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBackgroundBlur");
+        return s != null && s.getBoolValue();
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (isBlurEnabled()) {
+            super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        }
+    }
+
     @Override
     public void init() {
         this.on_gui = true;
 
-        PinnableFrame.nc_r = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUINameFrameR").getSliderValue();
-        PinnableFrame.nc_g = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUINameFrameG").getSliderValue();
-        PinnableFrame.nc_b = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUINameFrameB").getSliderValue();
-
-        PinnableFrame.bg_r = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBackgroundFrameR").getSliderValue();
-        PinnableFrame.bg_g = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBackgroundFrameG").getSliderValue();
-        PinnableFrame.bg_b = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBackgroundFrameB").getSliderValue();
-        PinnableFrame.bg_a = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBackgroundFrameA").getSliderValue();
-
-        PinnableFrame.bd_r = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBorderFrameR").getSliderValue();
-        PinnableFrame.bd_g = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBorderFrameG").getSliderValue();
-        PinnableFrame.bd_b = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBorderFrameB").getSliderValue();
-        PinnableFrame.bd_a = 0;
-
-        PinnableFrame.bdw_r = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBorderWidgetR").getSliderValue();
-        PinnableFrame.bdw_g = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBorderWidgetG").getSliderValue();
-        PinnableFrame.bdw_b = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBorderWidgetB").getSliderValue();
-        PinnableFrame.bdw_a = 255;
-
-        PinnableButton.nc_r = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUINameWidgetR").getSliderValue();
-        PinnableButton.nc_g = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUINameWidgetG").getSliderValue();
-        PinnableButton.nc_b = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUINameWidgetB").getSliderValue();
-
-        PinnableButton.bg_r = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBackgroundWidgetR").getSliderValue();
-        PinnableButton.bg_g = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBackgroundWidgetG").getSliderValue();
-        PinnableButton.bg_b = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBackgroundWidgetB").getSliderValue();
-        PinnableButton.bg_a = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBackgroundWidgetA").getSliderValue();
-
-        PinnableButton.bd_r = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBorderWidgetR").getSliderValue();
-        PinnableButton.bd_g = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBorderWidgetG").getSliderValue();
-        PinnableButton.bd_b = (int) Client.getSettingManager().getSettingByTag("GUI", "ClickGUIBorderWidgetB").getSliderValue();
+        // Populate the frame's button list from ManagerHud so each HUD component has a toggle button
+        frame.clear_buttons();
+        if (Client.getHudManager() != null) {
+            for (Pinnable pinnable : Client.getHudManager().get_array_huds()) {
+                PinnableButton btn = new PinnableButton(frame, pinnable.get_title(), pinnable.get_tag());
+                btn.setPinnable(pinnable);
+                frame.add_button(btn);
+            }
+        }
     }
 
     @Override
@@ -120,6 +142,13 @@ public class ClientHud extends Screen {
             this.frame.set_move_x(mx - this.frame.get_x());
             this.frame.set_move_y(my - this.frame.get_y());
         }
+
+        // Forward click to HUD components so they can be dragged on-screen
+        if (Client.getHudManager() != null) {
+            for (Pinnable pinnable : Client.getHudManager().get_array_huds()) {
+                pinnable.click(mx, my, mouse);
+            }
+        }
         return true;
     }
 
@@ -131,11 +160,27 @@ public class ClientHud extends Screen {
 
         this.frame.release(mx, my, state);
         this.frame.set_move(false);
+
+        // Forward release to HUD components to stop dragging
+        if (Client.getHudManager() != null) {
+            for (Pinnable pinnable : Client.getHudManager().get_array_huds()) {
+                pinnable.release(mx, my, state);
+            }
+        }
         return true;
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int mx, int my, float tick) {
+        reloadColors();
+        // Render active HUD components so the user can see and reposition them
+        if (Client.getHudManager() != null) {
+            for (Pinnable pinnable : Client.getHudManager().get_array_huds()) {
+                if (pinnable.is_active()) {
+                    pinnable.render(guiGraphics, mx, my);
+                }
+            }
+        }
         this.frame.render(guiGraphics, mx, my, 2);
     }
 }

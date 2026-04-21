@@ -42,7 +42,7 @@ public class Button extends AbstractWidget {
         this.width = master.get_width();
         this.height = font.getStringHeight();
 
-        this.button_name = this.setting.get_name();
+        this.button_name = this.setting.getDisplayName();
         this.can = true;
     }
 

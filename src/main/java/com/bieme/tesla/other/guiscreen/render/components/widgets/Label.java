@@ -41,12 +41,10 @@ public class Label extends AbstractWidget {
         this.width  = master.get_width();
         this.height = font.getStringHeight();
 
-        this.label_name = this.setting.getName();
+        // FIX: usar getDisplayName() para mostrar el nombre legible en vez del tag
+        this.label_name = this.setting.getDisplayName();
 
-        // Wurstplus-style: si el displayName fue "info" el tipo queda marcado como "info"
-        // y se renderiza solo el valor (sin el prefijo name: "value").
-        if ("info".equalsIgnoreCase(this.setting.type)
-                || this.setting.getName().equalsIgnoreCase("info")) {
+        if (this.setting.getName() != null && this.setting.getName().equalsIgnoreCase("info")) {
             this.info = true;
         }
 

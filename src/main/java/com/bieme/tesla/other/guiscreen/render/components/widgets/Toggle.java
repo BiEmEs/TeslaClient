@@ -37,7 +37,8 @@ public class Toggle extends AbstractWidget {
         this.width = 0;
         this.height = Minecraft.getInstance().font.lineHeight + 2;
 
-        this.toggle_name = this.setting.get_name();
+        // FIX: usar getDisplayName() para mostrar "Frame Name R" en vez de "HUDFrameNameR"
+        this.toggle_name = this.setting.getDisplayName();
         this.can = true;
     }
 
@@ -100,18 +101,21 @@ public class Toggle extends AbstractWidget {
         boolean is_active = this.setting.getBoolValue();
 
         int accentColor = Client.clickGui.getAccentColor(this.save_y, Math.abs(this.toggle_name.hashCode() % 20));
-        int accent_r = (accentColor >> 16) & 0xFF;
-        int accent_g = (accentColor >> 8) & 0xFF;
-        int accent_b = accentColor & 0xFF;
 
-        int textColor;
         if (is_active) {
-            textColor = (255 << 24) | (accent_r << 16) | (accent_g << 8) | accent_b;
-        } else {
-            textColor = (255 << 24) | (255 << 16) | (255 << 8) | 255;
+            gui.fill(save_x, save_y, save_x + width, save_y + height, (60 << 24) | ((accentColor) & 0x00FFFFFF));
         }
 
-        gui.drawString(Minecraft.getInstance().font, this.toggle_name, this.save_x + 2, this.save_y + 1, textColor);
+        gui.drawString(Minecraft.getInstance().font, this.toggle_name, this.save_x + 2, this.save_y + 1, 0xFFFFFFFF);
+
+        int boxSize = height - 2;
+        int boxX = save_x + width - boxSize - 2;
+        int boxY = save_y + 1;
+        if (is_active) {
+            gui.fill(boxX, boxY, boxX + boxSize, boxY + boxSize, (255 << 24) | (accentColor & 0x00FFFFFF));
+        } else {
+            gui.fill(boxX, boxY, boxX + boxSize, boxY + boxSize, 0xFF555555);
+        }
     }
 
     @Override

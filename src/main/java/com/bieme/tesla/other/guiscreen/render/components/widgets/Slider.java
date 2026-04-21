@@ -37,7 +37,7 @@ public class Slider extends AbstractWidget {
         this.height = Minecraft.getInstance().font.lineHeight + 2;
         this.can = true;
 
-        this.slider_name = this.setting != null ? this.setting.get_name() : tag;
+        this.slider_name = this.setting != null ? this.setting.getDisplayName() : tag;
 
         if (setting != null) {
             double min = setting.getMin();

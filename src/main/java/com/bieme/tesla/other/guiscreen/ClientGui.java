@@ -267,6 +267,13 @@ public class ClientGui extends Screen {
         super.mouseMoved(mouseX, mouseY);
     }
 
+    @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (isBlurEnabled()) {
+            super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        }
+    }
+
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
         for (Frame frames : this.frame) {
             frames.render(guiGraphics, mouseX, mouseY, 0);

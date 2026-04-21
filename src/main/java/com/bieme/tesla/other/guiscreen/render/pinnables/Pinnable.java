@@ -93,6 +93,7 @@ public abstract class Pinnable {
     }
 
     public int get_text_width(String text) {
+        if (mc.font == null) return 1;
         return mc.font.width(text);
     }
 }

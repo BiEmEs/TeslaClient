@@ -61,6 +61,14 @@ public class PinnableFrame {
         set_y(my - move_y);
     }
 
+    public void add_button(PinnableButton btn) {
+        pinnable_button.add(btn);
+    }
+
+    public void clear_buttons() {
+        pinnable_button.clear();
+    }
+
     public void click(int mx, int my, int mouse) {
         for (PinnableButton pb : pinnable_button) {
             pb.click(mx, my, mouse);
@@ -77,17 +85,28 @@ public class PinnableFrame {
     public void render(GuiGraphics gui, int mx, int my, int separate) {
         if (is_moving()) crush(mx, my);
 
-        gui.fill(x, y, x + width, y + height, (bg_a << 24) | (bg_r << 16) | (bg_g << 8) | bg_r);
-        gui.fill(x - 1, y, x + width + 1, y + height, (bd_a << 24) | (bd_r << 16) | (bd_g << 8) | bd_b);
+        int total_h = height;
+        for (PinnableButton pb : pinnable_button) {
+            total_h += pb.get_height() + 1;
+        }
+
+        // FIX: draw border first so background covers the interior, leaving only 1px edge visible
+        gui.fill(x - 1, y, x + width + 1, y + total_h, (bd_a << 24) | (bd_r << 16) | (bd_g << 8) | bd_b);
+        // FIX: was (... | bg_r) — blue channel was wrong, should be bg_b
+        gui.fill(x, y, x + width, y + total_h, (bg_a << 24) | (bg_r << 16) | (bg_g << 8) | bg_b);
         gui.drawString(mc.font, name, x + 4, y + 4, 0xFFFFFFFF);
 
+        int button_y = y + height;
         for (PinnableButton pb : pinnable_button) {
             pb.set_x(x + separate);
+            pb.set_save_y(button_y);
             pb.render(gui, mx, my, separate);
-            
+
             if (pb.motion(mx, my)) {
-                gui.fill(get_x() - 1, pb.get_save_y(), get_width() + 1, pb.get_height(), (bdw_a << 24) | (bdw_r << 16) | (bdw_g << 8) | bdw_b);
+                // FIX: was get_width()+1 (not x2) and pb.get_height() (not y2)
+                gui.fill(x - 1, button_y, x + width + 1, button_y + pb.get_height(), (bdw_a << 24) | (bdw_r << 16) | (bdw_g << 8) | bdw_b);
             }
+            button_y += pb.get_height() + 1;
         }
     }
 }

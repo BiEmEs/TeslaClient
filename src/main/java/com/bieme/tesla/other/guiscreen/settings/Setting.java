@@ -10,7 +10,7 @@ public class Setting {
     private double min = 0, max = 100;
     private String currentValue = "";
     private java.util.List<String> values = null;
-    
+
     public String setting_name;
     public String display_name;
     public boolean slider;
@@ -33,22 +33,33 @@ public class Setting {
     public void setValue(Object v) { this.value = v; }
     public Object getDefaultValue() { return defaultValue; }
     public Module getMaster() { return master; }
-    
+
+    /**
+     * Returns the human-readable display name if set, otherwise falls back to the internal name (tag).
+     * Use this in widgets instead of get_name()/getName() so users see "Frame Name R" instead of "HUDFrameNameR".
+     */
+    public String getDisplayName() {
+        if (display_name != null && !display_name.isEmpty()) {
+            return display_name;
+        }
+        return name;
+    }
+
     public boolean getBoolValue() {
         if (value instanceof Boolean) return (Boolean) value;
         if (value instanceof String) return Boolean.parseBoolean((String) value);
         return false;
     }
-    
+
     public double getSliderValue() {
         if (value instanceof Number) return ((Number) value).doubleValue();
         return 0;
     }
-    
+
     public void setSliderValue(double v) {
         this.value = v;
     }
-    
+
     public double getMin() { return min; }
     public void setMin(double min) { this.min = min; }
     public void setMax(double max) { this.max = max; }
@@ -57,7 +68,7 @@ public class Setting {
         if (value != null) return value.toString();
         return "";
     }
-    
+
     public String get_current_value() { return currentValue.isEmpty() ? getStringValue() : currentValue; }
     public void set_current_value(String v) { this.currentValue = v; }
 

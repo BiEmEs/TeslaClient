@@ -157,7 +157,8 @@ public class ModuleButton {
 
         int textColor;
         if (module.isEnabled()) {
-            textColor = color_bg_on;
+            // FIX: was color_bg_on (same as background = invisible text)
+            textColor = 0xFFFFFFFF;
         } else {
             int nm_r = Client.clickGui.theme_widget_name_r;
             int nm_g = Client.clickGui.theme_widget_name_g;

@@ -4,6 +4,7 @@ import com.bieme.tesla.other.manager.ManagerHack;
 import com.bieme.tesla.other.manager.ManagerCommand;
 import com.bieme.tesla.other.manager.ManagerConfig;
 import com.bieme.tesla.other.manager.ManagerSetting;
+import com.bieme.tesla.other.manager.ManagerHud;
 import com.bieme.tesla.other.guiscreen.ClientGui;
 import com.bieme.tesla.other.guiscreen.ClientHud;
 import com.bieme.tesla.modules.hacks.Module;
@@ -29,7 +30,8 @@ public class Client {
     private static ManagerCommand commandManager;
     private static ManagerConfig configManager;
     private static ManagerSetting settingManager;
-    
+    private static ManagerHud hudManager;
+
     public static ClientGui clickGui;
     public static ClientHud clickHud;
 
@@ -40,13 +42,17 @@ public class Client {
         hackManager = new ManagerHack();
         commandManager = new ManagerCommand();
         settingManager = new ManagerSetting();
-        
+
         clickGui = new ClientGui();
         clickHud = new ClientHud();
-        
+
         commandManager.init();
         hackManager.init();
-        
+
+        // ManagerHud se inicializa DESPUES de hackManager.init() para que los pinnables
+        // puedan leer settings del modulo HUD si los necesitan al construirse.
+        hudManager = new ManagerHud();
+
         LOGGER.info("TeslaClient {} by {} initialized!", CLIENT_NAME, CLIENT_AUTHOR);
     }
 
@@ -64,5 +70,9 @@ public class Client {
 
     public static ManagerSetting getSettingManager() {
         return settingManager;
+    }
+
+    public static ManagerHud getHudManager() {
+        return hudManager;
     }
 }

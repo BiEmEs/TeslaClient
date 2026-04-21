@@ -57,14 +57,14 @@ public class PinnableButton {
 
     public void render(GuiGraphics gui, int mx, int my, int separate) {
         this.width = master.get_width() - separate;
-        this.save_y = this.y + master.get_y() - 10;
+        // save_y is set externally by PinnableFrame.render() via set_save_y() before this call
 
+        String label = pinnable != null ? pinnable.get_title() : "";
         if (pinnable != null && pinnable.is_active()) {
             gui.fill(x, save_y, x + width, save_y + height, 0xFF2D1E30);
-            gui.drawString(mc.font, pinnable.get_title(), x + separate, save_y, 0xFFFFFFFF);
-        } else {
-            gui.drawString(mc.font, pinnable != null ? pinnable.get_title() : "", x + separate, save_y, 0xFFFFFFFF);
         }
+        // FIX: text drawn at save_y+1 for 1px top padding instead of flush at top edge
+        gui.drawString(mc.font, label, x + separate, save_y + 1, 0xFFFFFFFF);
     }
     
     public Pinnable getPinnable() { return pinnable; }

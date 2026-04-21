@@ -10,21 +10,37 @@ public class HUDModule extends Module {
     public HUDModule() {
         super("HUD", "gui for pinnables", Category.CLIENT);
 
-        create("info", "HUDStringsList", "Strings");
+        // General
+        create("24h",            "HUDTime24h",         true);
+        create("Dim Coords",     "HUDDimensionCoords",  true);
 
-        create("Color R", "HUDStringsColorR", 255, 0, 255);
-        create("Color G", "HUDStringsColorG", 255, 0, 255);
-        create("Color B", "HUDStringsColorB", 255, 0, 255);
-        create("Alpha",   "HUDStringsColorA", 230, 0, 255);
+        // Frame
+        create("Title R",        "HUDFrameNameR",   255, 0, 255);
+        create("Title G",        "HUDFrameNameG",   105, 0, 255);
+        create("Title B",        "HUDFrameNameB",   180, 0, 255);
 
-        create("Compass Scale", "HUDCompassScale", 16, 1, 60);
+        create("Bg R",           "HUDFrameBgR",      30, 0, 255);
+        create("Bg G",           "HUDFrameBgG",      20, 0, 255);
+        create("Bg B",           "HUDFrameBgB",      30, 0, 255);
+        create("Bg A",           "HUDFrameBgA",     240, 0, 255);
 
-        create("ArrayList", "HUDArrayList", "Free",
-                combobox("Free", "Top R", "Top L", "Bottom R", "Bottom L"));
+        create("Border R",       "HUDFrameBorderR",   0, 0, 255);
+        create("Border G",       "HUDFrameBorderG",   0, 0, 255);
+        create("Border B",       "HUDFrameBorderB",   0, 0, 255);
 
-        create("All Potions", "HUDAllPotions", false);
+        // Buttons
+        create("Btn R",          "HUDBtnNameR",     255, 0, 255);
+        create("Btn G",          "HUDBtnNameG",     255, 0, 255);
+        create("Btn B",          "HUDBtnNameB",     255, 0, 255);
 
-        create("Max Players", "HUDMaxPlayers", 24, 1, 64);
+        create("Btn Bg R",       "HUDBtnBgR",        45, 0, 255);
+        create("Btn Bg G",       "HUDBtnBgG",        30, 0, 255);
+        create("Btn Bg B",       "HUDBtnBgB",        45, 0, 255);
+        create("Btn Bg A",       "HUDBtnBgA",       200, 0, 255);
+
+        create("Btn Border R",   "HUDBtnBorderR",   255, 0, 255);
+        create("Btn Border G",   "HUDBtnBorderG",   105, 0, 255);
+        create("Btn Border B",   "HUDBtnBorderB",   180, 0, 255);
     }
 
     @Override

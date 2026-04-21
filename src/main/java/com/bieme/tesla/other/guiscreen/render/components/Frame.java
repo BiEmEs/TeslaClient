@@ -37,7 +37,9 @@ public class Frame {
                     ModuleButton mb = new ModuleButton(module, this);
                     moduleButtons.add(mb);
 
-                    if (!module.getTag().equals("gui") && module.getSettings() != null) {
+                    // FIX: se quitó la exclusión de "gui" para que el módulo GUI
+                    // también muestre sus widgets y no se superponga con el siguiente.
+                    if (module.getSettings() != null) {
                         for (var setting : module.getSettings()) {
                             String type = setting.type;
                             if ("slider".equals(type)) {
@@ -67,7 +69,8 @@ public class Frame {
         for (ModuleButton buttons : moduleButtons) {
             buttons.set_y(this.height);
             if (buttons.is_open()) {
-                this.height += buttons.getSettingsHeight();
+
+                this.height += fontHeight + buttons.getSettingsHeight();
             } else {
                 this.height += fontHeight;
             }
@@ -183,7 +186,7 @@ public class Frame {
     }
 
     public void onMouseScroll(int amount) {
-        // reserved for future scrollable settings
+
     }
 
     public ArrayList<ModuleButton> get_module_buttons() {
