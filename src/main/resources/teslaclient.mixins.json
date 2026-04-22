@@ -9,7 +9,8 @@
   },
   "client": [
     "MixinMinecraftClient",
-    "MixinGui"
+    "MixinGui",
+    "MixinChat"
   ],
   "server": []
 }

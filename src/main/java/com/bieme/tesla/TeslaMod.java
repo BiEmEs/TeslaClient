@@ -22,6 +22,8 @@ public class TeslaMod implements ModInitializer, ClientModInitializer {
     public void onInitializeClient() {
         LOGGER.info("TeslaClient loaded on client!");
         Client.init();
+
+        LOGGER.info("TeslaClient chat commands ready!");
     }
 
     /**

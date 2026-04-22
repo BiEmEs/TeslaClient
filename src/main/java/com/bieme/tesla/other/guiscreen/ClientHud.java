@@ -52,7 +52,7 @@ public class ClientHud extends Screen {
         PinnableFrame.bdw_g = (int) sm.getSettingByTag("HUD", "HUDBtnBorderG").getSliderValue();
         PinnableFrame.bdw_b = (int) sm.getSettingByTag("HUD", "HUDBtnBorderB").getSliderValue();
         PinnableFrame.bdw_a = 255;
-        // Button (pinnable) colors — read from HUD module
+
         PinnableButton.nc_r = (int) sm.getSettingByTag("HUD", "HUDBtnNameR").getSliderValue();
         PinnableButton.nc_g = (int) sm.getSettingByTag("HUD", "HUDBtnNameG").getSliderValue();
         PinnableButton.nc_b = (int) sm.getSettingByTag("HUD", "HUDBtnNameB").getSliderValue();

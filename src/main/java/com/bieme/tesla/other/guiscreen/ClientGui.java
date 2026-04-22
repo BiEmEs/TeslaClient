@@ -90,37 +90,31 @@ public class ClientGui extends Screen {
             if (tag == null) continue;
 
             switch (tag) {
-                // Frame name
-                case "ClickGUINameFrameR": theme_frame_name_r = (int) setting.getSliderValue(); break;
-                case "ClickGUINameFrameG": theme_frame_name_g = (int) setting.getSliderValue(); break;
-                case "ClickGUINameFrameB": theme_frame_name_b = (int) setting.getSliderValue(); break;
+                case "NameFrameR": theme_frame_name_r = (int) setting.getSliderValue(); break;
+                case "NameFrameG": theme_frame_name_g = (int) setting.getSliderValue(); break;
+                case "NameFrameB": theme_frame_name_b = (int) setting.getSliderValue(); break;
 
-                // Frame background
-                case "ClickGUIBackgroundFrameR": theme_frame_background_r = (int) setting.getSliderValue(); break;
-                case "ClickGUIBackgroundFrameG": theme_frame_background_g = (int) setting.getSliderValue(); break;
-                case "ClickGUIBackgroundFrameB": theme_frame_background_b = (int) setting.getSliderValue(); break;
-                case "ClickGUIBackgroundFrameA": theme_frame_background_a = (int) setting.getSliderValue(); break;
+                case "BackgroundFrameR": theme_frame_background_r = (int) setting.getSliderValue(); break;
+                case "BackgroundFrameG": theme_frame_background_g = (int) setting.getSliderValue(); break;
+                case "BackgroundFrameB": theme_frame_background_b = (int) setting.getSliderValue(); break;
+                case "BackgroundFrameA": theme_frame_background_a = (int) setting.getSliderValue(); break;
 
-                // Frame border
-                case "ClickGUIBorderFrameR": theme_frame_border_r = (int) setting.getSliderValue(); break;
-                case "ClickGUIBorderFrameG": theme_frame_border_g = (int) setting.getSliderValue(); break;
-                case "ClickGUIBorderFrameB": theme_frame_border_b = (int) setting.getSliderValue(); break;
+                case "BorderFrameR": theme_frame_border_r = (int) setting.getSliderValue(); break;
+                case "BorderFrameG": theme_frame_border_g = (int) setting.getSliderValue(); break;
+                case "BorderFrameB": theme_frame_border_b = (int) setting.getSliderValue(); break;
 
-                // Widget name
-                case "ClickGUINameWidgetR": theme_widget_name_r = (int) setting.getSliderValue(); break;
-                case "ClickGUINameWidgetG": theme_widget_name_g = (int) setting.getSliderValue(); break;
-                case "ClickGUINameWidgetB": theme_widget_name_b = (int) setting.getSliderValue(); break;
+                case "NameWidgetR": theme_widget_name_r = (int) setting.getSliderValue(); break;
+                case "NameWidgetG": theme_widget_name_g = (int) setting.getSliderValue(); break;
+                case "NameWidgetB": theme_widget_name_b = (int) setting.getSliderValue(); break;
 
-                // Widget background
-                case "ClickGUIBackgroundWidgetR": theme_widget_background_r = (int) setting.getSliderValue(); break;
-                case "ClickGUIBackgroundWidgetG": theme_widget_background_g = (int) setting.getSliderValue(); break;
-                case "ClickGUIBackgroundWidgetB": theme_widget_background_b = (int) setting.getSliderValue(); break;
-                case "ClickGUIBackgroundWidgetA": theme_widget_background_a = (int) setting.getSliderValue(); break;
+                case "BackgroundWidgetR": theme_widget_background_r = (int) setting.getSliderValue(); break;
+                case "BackgroundWidgetG": theme_widget_background_g = (int) setting.getSliderValue(); break;
+                case "BackgroundWidgetB": theme_widget_background_b = (int) setting.getSliderValue(); break;
+                case "BackgroundWidgetA": theme_widget_background_a = (int) setting.getSliderValue(); break;
 
-                // Widget border
-                case "ClickGUIBorderWidgetR": theme_widget_border_r = (int) setting.getSliderValue(); break;
-                case "ClickGUIBorderWidgetG": theme_widget_border_g = (int) setting.getSliderValue(); break;
-                case "ClickGUIBorderWidgetB": theme_widget_border_b = (int) setting.getSliderValue(); break;
+                case "BorderWidgetR": theme_widget_border_r = (int) setting.getSliderValue(); break;
+                case "BorderWidgetG": theme_widget_border_g = (int) setting.getSliderValue(); break;
+                case "BorderWidgetB": theme_widget_border_b = (int) setting.getSliderValue(); break;
 
                 default: break;
             }
@@ -134,7 +128,7 @@ public class ClientGui extends Screen {
         if (guiModule == null) return true;
 
         for (var setting : guiModule.getSettings()) {
-            if ("ClickGUIBackgroundBlur".equals(setting.getTag())) {
+            if ("Blur".equals(setting.getTag())) {
                 return setting.getBoolValue();
             }
         }
@@ -275,6 +269,7 @@ public class ClientGui extends Screen {
     }
 
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
+        loadSettings();
         for (Frame frames : this.frame) {
             frames.render(guiGraphics, mouseX, mouseY, 0);
         }

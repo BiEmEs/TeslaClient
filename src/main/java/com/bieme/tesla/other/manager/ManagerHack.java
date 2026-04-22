@@ -5,6 +5,7 @@ import com.bieme.tesla.modules.hacks.Category;
 import com.bieme.tesla.modules.hacks.client.GUI;
 import com.bieme.tesla.modules.hacks.client.HUDModule;
 import com.bieme.tesla.modules.hacks.combat.KillAura;
+import com.bieme.tesla.modules.hacks.misc.MiddleClick;
 import com.bieme.tesla.modules.utils.player.fakeplayer.Stewart;
 
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ public class ManagerHack {
         // COMBAT
         addModule(new KillAura());
 
+        // MISC
+        addModule(new MiddleClick());
     }
 
     public void addModule(Module module) {
@@ -61,7 +64,7 @@ public class ManagerHack {
         return list;
     }
 
-    public List<Module> get_array_hacks() {
+    public List<Module> get_modules() {
         return moduleList;
     }
 
